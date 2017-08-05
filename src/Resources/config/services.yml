@@ -1,0 +1,12 @@
+services:
+    okvpn_fixture.data.executor:
+        class: Okvpn\Bundle\FixtureBundle\Migration\DataFixturesExecutor
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+
+    okvpn_fixture.data.loader:
+        class: Okvpn\Bundle\FixtureBundle\Migration\Loader\DataFixturesLoader
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@service_container'
