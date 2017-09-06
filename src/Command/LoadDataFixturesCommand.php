@@ -17,9 +17,6 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
     const MAIN_FIXTURES_TYPE = DataFixturesExecutorInterface::MAIN_FIXTURES;
     const DEMO_FIXTURES_TYPE = DataFixturesExecutorInterface::DEMO_FIXTURES;
 
-    const MAIN_FIXTURES_PATH = 'Migrations/Data/ORM';
-    const DEMO_FIXTURES_PATH = 'Migrations/Data/Demo/ORM';
-
     /**
      * {@inheritdoc}
      */
@@ -169,9 +166,9 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
      */
     protected function getFixtureRelativePath(InputInterface $input)
     {
-        $fixtureRelativePath = $this->getTypeOfFixtures($input) == self::DEMO_FIXTURES_TYPE
-            ? self::DEMO_FIXTURES_PATH
-            : self::MAIN_FIXTURES_PATH;
+        $fixtureRelativePath = $this->getTypeOfFixtures($input) === self::DEMO_FIXTURES_TYPE
+            ? $this->getContainer()->getParameter('okvpn_fixture.path_data_demo')
+            : $this->getContainer()->getParameter('okvpn_fixture.path_data_main');
 
         return str_replace('/', DIRECTORY_SEPARATOR, '/' . $fixtureRelativePath);
     }

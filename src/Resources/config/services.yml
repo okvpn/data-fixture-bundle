@@ -1,3 +1,8 @@
+parameters:
+    okvpn_fixture.table: 'okvpn_fixture_data'
+    okvpn_fixture.path_data_main: 'Migrations/Data/ORM'
+    okvpn_fixture.path_data_demo: 'Migrations/Data/Demo/ORM'
+
 services:
     okvpn_fixture.data.executor:
         class: Okvpn\Bundle\FixtureBundle\Migration\DataFixturesExecutor
@@ -10,3 +15,9 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@service_container'
+
+    okvpn_fixture.listener.configuration_resolver:
+        class: Okvpn\Bundle\FixtureBundle\EventListener\ConfigurationResolver
+        arguments: ['%okvpn_fixture.table%']
+        tags:
+            - { name: doctrine.event_listener, event: loadClassMetadata }
