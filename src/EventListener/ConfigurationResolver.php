@@ -3,10 +3,13 @@
 namespace Okvpn\Bundle\FixtureBundle\EventListener;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Id\SequenceGenerator;
 use Okvpn\Bundle\FixtureBundle\Entity\DataFixture;
 
 class ConfigurationResolver
 {
+    const DEFAULT_TABLE = 'okvpn_fixture_data';
+
     private $table;
 
     /**
@@ -25,8 +28,31 @@ class ConfigurationResolver
         $metadata = $eventArgs->getClassMetadata();
         if (null !== $this->table && $metadata->getName() === DataFixture::class) {
             $table = $metadata->table;
+
+            if ($table['name'] === self::DEFAULT_TABLE) {
+                return;
+
+            }
             $table['name'] = $this->table;
             $metadata->setPrimaryTable($table);
+
+            $definition = $metadata->sequenceGeneratorDefinition;
+            $definition['sequenceName'] = str_replace(
+                self::DEFAULT_TABLE,
+                $this->table,
+                $definition['sequenceName']
+            );
+
+            $em = $eventArgs->getEntityManager();
+            $sequenceName = $em->getConfiguration()->getQuoteStrategy()->getSequenceName(
+                $definition,
+                $metadata,
+                $em->getConnection()->getDatabasePlatform()
+            );
+
+            $sequenceGenerator = new SequenceGenerator($sequenceName, $definition['allocationSize']);
+            $metadata->sequenceGeneratorDefinition = $definition;
+            $metadata->setIdGenerator($sequenceGenerator);
         }
     }
 }
