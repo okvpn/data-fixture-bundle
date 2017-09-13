@@ -1,6 +1,7 @@
-Data fixtures
--------------
+# Data fixtures
 
+Intro
+-----
 Symfony allows to load data using data fixtures. But these fixtures are run each time when `doctrine:fixtures:load` command is executed.
 
 To avoid loading the same fixture several time, **okvpn:fixture:data:load** command was created. This command guarantees that each data fixture will be loaded only once.
@@ -56,7 +57,7 @@ Create file `src/Akuma/PassBundle/Migrations/Data/ORM/TestFixture.php`
 ```php
 
 <?php 
-// src/Akuma/PassBundle/Migrations/Data/ORM/TestFixture.php
+// src/Akuma/PassBundle/Migrations/Data/ORM/MeteoFixture.php
 
 namespace Akuma\PassBundle\Fixture\Data;
 
@@ -174,3 +175,7 @@ class LoadSomeDataFixture extends AbstractFixture implements VersionedFixtureInt
 }
 ```
 [1]: https://github.com/doctrine/data-fixtures#fixture-ordering
+
+## Licence
+
+MIT License
