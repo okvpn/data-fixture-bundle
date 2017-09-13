@@ -29,7 +29,7 @@ class ConfigurationResolver
         if (null !== $this->table && $metadata->getName() === DataFixture::class) {
             $table = $metadata->table;
 
-            if ($table['name'] === self::DEFAULT_TABLE) {
+            if ($this->table=== self::DEFAULT_TABLE) {
                 return;
 
             }
@@ -37,6 +37,10 @@ class ConfigurationResolver
             $metadata->setPrimaryTable($table);
 
             $definition = $metadata->sequenceGeneratorDefinition;
+            if ($definition === null) {
+                return;
+            }
+
             $definition['sequenceName'] = str_replace(
                 self::DEFAULT_TABLE,
                 $this->table,
