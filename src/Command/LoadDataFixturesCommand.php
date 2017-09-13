@@ -2,6 +2,8 @@
 
 namespace Okvpn\Bundle\FixtureBundle\Command;
 
+use Doctrine\DBAL\Connection;
+use Okvpn\Bundle\FixtureBundle\Tools\FixtureDatabaseChecker;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,8 +19,10 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
     const MAIN_FIXTURES_TYPE = DataFixturesExecutorInterface::MAIN_FIXTURES;
     const DEMO_FIXTURES_TYPE = DataFixturesExecutorInterface::DEMO_FIXTURES;
 
-    const MAIN_FIXTURES_PATH = 'Migrations/Data/ORM';
-    const DEMO_FIXTURES_PATH = 'Migrations/Data/Demo/ORM';
+    /**
+     * @var Connection
+     */
+    protected $connection;
 
     /**
      * {@inheritdoc}
@@ -57,9 +61,18 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->connection = $this->getContainer()->get('doctrine')->getConnection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $fixtures = null;
+        $this->ensureTableExist();
         try {
             $fixtures = $this->getFixtures($input, $output);
         } catch (\RuntimeException $ex) {
@@ -169,10 +182,18 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
      */
     protected function getFixtureRelativePath(InputInterface $input)
     {
-        $fixtureRelativePath = $this->getTypeOfFixtures($input) == self::DEMO_FIXTURES_TYPE
-            ? self::DEMO_FIXTURES_PATH
-            : self::MAIN_FIXTURES_PATH;
+        $fixtureRelativePath = $this->getTypeOfFixtures($input) === self::DEMO_FIXTURES_TYPE
+            ? $this->getContainer()->getParameter('okvpn_fixture.path_data_demo')
+            : $this->getContainer()->getParameter('okvpn_fixture.path_data_main');
 
         return str_replace('/', DIRECTORY_SEPARATOR, '/' . $fixtureRelativePath);
+    }
+
+    protected function ensureTableExist()
+    {
+        $table =  $this->getContainer()->getParameter('okvpn_fixture.table');
+        if (!FixtureDatabaseChecker::tablesExist($this->connection, $table)) {
+            FixtureDatabaseChecker::declareTable($this->connection, $table);
+        }
     }
 }
