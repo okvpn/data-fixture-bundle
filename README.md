@@ -4,7 +4,7 @@ Intro
 -----
 Symfony allows to load data using data fixtures. But these fixtures are run each time when `doctrine:fixtures:load` command is executed.
 
-To avoid loading the same fixture several time, **okvpn:fixture:data:load** command was created. This command guarantees that each data fixture will be loaded only once.
+To avoid loading the same fixture several time, **okvpn:fixtures:data:load** command was created. This command guarantees that each data fixture will be loaded only once.
 
 This command supports two types of migration files: `main` data fixtures and `demo` data fixtures. During an installation, user can select to load or not demo data.
 
@@ -57,7 +57,7 @@ Create file `src/Akuma/PassBundle/Migrations/Data/ORM/TestFixture.php`
 ```php
 
 <?php 
-// src/Akuma/PassBundle/Migrations/Data/ORM/MeteoFixture.php
+// src/Akuma/PassBundle/Migrations/Data/ORM/TestFixture.php
 
 namespace Akuma\PassBundle\Fixture\Data;
 
@@ -65,7 +65,7 @@ use Akuma\PassBundle\Entity\Item;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class MeteoFixture extends AbstractFixture 
+class TestFixture extends AbstractFixture 
 {
     public function load(ObjectManager $manager)
     {
@@ -82,7 +82,7 @@ class MeteoFixture extends AbstractFixture
 
 ```
 
-And run command `okvpn:fixture:data:load` to load it.
+And run command `okvpn:fixtures:data:load` to load it.
 
 Versioned fixtures
 ------------------
