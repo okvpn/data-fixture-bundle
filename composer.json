@@ -2,7 +2,7 @@
     "name": "okvpn/fixture-bundle",
     "type": "symfony-bundle",
     "keywords": ["Demo data", "Data", "Fixtures"],
-    "homepage": "https://github.com/okvpn/migration-bundle",
+    "homepage": "https://github.com/okvpn/fixture-bundle",
     "license": "MIT",
     "authors": [
         {

@@ -14,7 +14,7 @@ use Okvpn\Bundle\FixtureBundle\Migration\DataFixturesExecutorInterface;
 
 class LoadDataFixturesCommand extends ContainerAwareCommand
 {
-    const COMMAND_NAME = 'okvpn:fixture:data:load';
+    const COMMAND_NAME = 'okvpn:fixtures:data:load';
 
     const MAIN_FIXTURES_TYPE = DataFixturesExecutorInterface::MAIN_FIXTURES;
     const DEMO_FIXTURES_TYPE = DataFixturesExecutorInterface::DEMO_FIXTURES;
@@ -30,6 +30,7 @@ class LoadDataFixturesCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName(static::COMMAND_NAME)
+            ->setAliases(['okvpn:fixture:data:load'])
             ->setDescription('Load data fixtures.')
             ->addOption(
                 'fixtures-type',
