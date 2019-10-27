@@ -21,3 +21,13 @@ services:
         arguments: ['%okvpn_fixture.table%']
         tags:
             - { name: doctrine.event_listener, event: loadClassMetadata }
+
+    okvpn_fixture.command.load_data_fixtures:
+        class: Okvpn\Bundle\FixtureBundle\Command\LoadDataFixturesCommand
+        arguments:
+            - '@doctrine'
+            - '@okvpn_fixture.data.loader'
+            - '@okvpn_fixture.data.executor'
+            - '@parameter_bag'
+        tags:
+            - { name: console.command }
